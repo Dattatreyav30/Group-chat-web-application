@@ -14,7 +14,6 @@ const crypto = require('crypto');
 // console.log(secretkey)
 
 const jwtSecretkey = process.env.JWT_SECRET_KEY;
-console.log(jwtSecretkey)
 
 function generateAccessToken(id) {
     return jwt.sign({ userId: id }, jwtSecretkey)
@@ -54,7 +53,6 @@ exports.addUserlogin = async (req, res, next) => {
     try {
         const email = req.body.email;
         const password = req.body.Password;
-        console.log(req.body);
         const user = await User.findOne({
             where: { email: email }
         })
@@ -68,7 +66,6 @@ exports.addUserlogin = async (req, res, next) => {
             return res.status(401).json({ message: 'Incorrect password' })
         }
     } catch (err) {
-        console.log(err)
         res.status(500).json({ message: 'internal server error' })
     }
 }
