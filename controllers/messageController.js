@@ -1,6 +1,6 @@
 const Message = require('../models/messageModel');
 
-const jwt = require('jsonwebtoken')
+const User = require('../models/userModel')
 
 exports.addMessage = async (req, res, next) => {
     try {
@@ -15,3 +15,13 @@ exports.addMessage = async (req, res, next) => {
     }
 }
 
+exports.getAllMessages = async (req, res, next) => {
+    try {
+        const messages = await Message.findAll();
+        const userName = await User.findOne({ where: { id: req.user.id } })
+        res.status(200).json({messages,userName});
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'internal server error' })
+    }
+}

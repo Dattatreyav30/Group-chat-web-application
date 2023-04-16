@@ -61,7 +61,7 @@ exports.addUserlogin = async (req, res, next) => {
         }
         const match = await bcrypt.compare(password, user.password);
         if (match) {
-            res.status(200).json({ message: 'user logged in succesfully', token: generateAccessToken(user.id),user })
+            res.status(200).json({ message: 'user logged in succesfully', token: generateAccessToken(user.id), user })
         } else {
             return res.status(401).json({ message: 'Incorrect password' })
         }

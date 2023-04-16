@@ -20,3 +20,22 @@ form.addEventListener('submit', async (e) => {
 
     }
 })
+
+
+window.addEventListener('DOMContentLoaded', async (e) => {
+    const token = localStorage.getItem('token');
+    e.preventDefault();
+    const response = await axios.get('http://localhost:7000/message/getAllMessages', { headers: { 'authorization': token } });
+    console.log(response.data)
+    response.data.messages.forEach(async (data) => {
+        await addtoFrontEnd(data.messages)
+    })
+})
+
+const addtoFrontEnd = async (data) => {
+    const messageContainer = document.getElementById('userMessage');
+    const messageNode = document.createElement('p');
+    const messageText = document.createTextNode(data);
+    messageNode.appendChild(messageText);
+    messageContainer.appendChild(messageNode);
+}
