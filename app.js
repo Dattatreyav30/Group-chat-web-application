@@ -8,6 +8,8 @@ const sequelize = require('./util/database')
 
 const app = express();
 
+const User = require('./models/userModel');
+const Messages = require('./models/messageModel');
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
@@ -19,10 +21,13 @@ app.use(
 );
 
 const userRoute = require('./routes/userRoute');
-const { options } = require('./routes/userRoute');
-const { get } = require('http');
+const messageRoute = require('./routes/messageRoute')
 
 app.use('/user', userRoute);
+app.use('/message',messageRoute)
+
+User.hasMany(Messages);
+Messages.belongsTo(User);
 
 sequelize.sync();
 app.listen(7000);
