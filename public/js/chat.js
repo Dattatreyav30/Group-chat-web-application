@@ -1,11 +1,5 @@
-const name = localStorage.getItem('name');
-const nameNode = document.createTextNode(`${name} joined`)
-const user = document.getElementById('h4');
-user.appendChild(nameNode);
-
 
 const form = document.querySelector('form');
-
 form.addEventListener('submit', async (e) => {
     try {
         e.preventDefault();
@@ -26,16 +20,34 @@ window.addEventListener('DOMContentLoaded', async (e) => {
     const token = localStorage.getItem('token');
     e.preventDefault();
     const response = await axios.get('http://localhost:7000/message/getAllMessages', { headers: { 'authorization': token } });
-    console.log(response.data)
-    response.data.messages.forEach(async (data) => {
-        await addtoFrontEnd(data.messages)
+    const mappedData = await response.data.messages.map((data) => {
+        return {
+            name: data.name,
+            messages: data.messages
+        };
+    });
+
+    mappedData.forEach(async (obj) => {
+        //await showWhojoined(obj.name)
+        await addtoFrontEnd(obj.name, obj.messages)
     })
 })
 
-const addtoFrontEnd = async (data) => {
+const showWhojoined = async (name) => {
+    const whojoined = document.getElementById('whojoined');
+    //console.log(whojoined)
+}
+
+
+
+const addtoFrontEnd = async (name, messages) => {
     const messageContainer = document.getElementById('userMessage');
     const messageNode = document.createElement('p');
-    const messageText = document.createTextNode(data);
+    const nameNode = document.createElement('b');
+    const nameText = document.createTextNode(name + ":  " + " ");
+    const messageText = document.createTextNode(messages);
+    nameNode.appendChild(nameText);
+    messageNode.appendChild(nameNode);
     messageNode.appendChild(messageText);
     messageContainer.appendChild(messageNode);
 }

@@ -7,6 +7,7 @@ exports.addMessage = async (req, res, next) => {
         const { message } = req.body;
         await Message.create({
             userId: req.user.id,
+            name : req.user.name,
             messages: message
         })
         res.status(200).json({ Message: 'message added succesfully' })

@@ -11,7 +11,7 @@ form.addEventListener('submit', async (e) => {
         }
         const response = await axios.post('http://localhost:7000/user/signup', obj);
         alert(response.data.message);
-        location.reload();
+      window.location.href = 'http://127.0.0.1:5500/public/Views/login.html'
     }catch(err){
         alert(err.response.data.message);
     }
