@@ -19,35 +19,27 @@ form.addEventListener('submit', async (e) => {
 window.addEventListener('DOMContentLoaded', async (e) => {
     const token = localStorage.getItem('token');
     e.preventDefault();
-    const response = await axios.get('http://localhost:7000/message/getAllMessages', { headers: { 'authorization': token } });
-    const mappedData = await response.data.messages.map((data) => {
-        return {
-            name: data.name,
-            messages: data.messages
-        };
-    });
+    setInterval(async () => {
+        const response = await axios.get('http://localhost:7000/message/getAllMessages', { headers: { 'authorization': token } });
+        const mappedData = await response.data.messages.map((data) => {
+            return {
+                name: data.name,
+                messages: data.messages
+            };
+        });
+        const messageContainer = document.getElementById('userMessage');
+        messageContainer.innerHTML = ''
+        mappedData.forEach(async (obj) => {
+            await addtoFrontEnd(obj.name, obj.messages)
+        })
+    }, 1000)
 
-    mappedData.forEach(async (obj) => {
-        //await showWhojoined(obj.name)
-        await addtoFrontEnd(obj.name, obj.messages)
-    })
 })
 
-const showWhojoined = async (name) => {
-    const whojoined = document.getElementById('whojoined');
-    //console.log(whojoined)
-}
-
-
-
-const addtoFrontEnd = async (name, messages) => {
+const addtoFrontEnd = async (name, message) => {
     const messageContainer = document.getElementById('userMessage');
-    const messageNode = document.createElement('p');
-    const nameNode = document.createElement('b');
-    const nameText = document.createTextNode(name + ":  " + " ");
-    const messageText = document.createTextNode(messages);
-    nameNode.appendChild(nameText);
-    messageNode.appendChild(nameNode);
-    messageNode.appendChild(messageText);
-    messageContainer.appendChild(messageNode);
+    const messageHtml = `
+      <p><b>${name}: </b>${message}</p>
+    `;
+    messageContainer.insertAdjacentHTML('beforeend', messageHtml);
 }
