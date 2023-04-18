@@ -1,6 +1,7 @@
 const Message = require('../models/messageModel');
 
-const User = require('../models/userModel')
+const User = require('../models/userModel');
+const { Op } = require('sequelize');
 
 exports.addMessage = async (req, res, next) => {
     try {
@@ -15,12 +16,15 @@ exports.addMessage = async (req, res, next) => {
         res.status(500).json({ Message: 'internal server error' })
     }
 }
-
 exports.getAllMessages = async (req, res, next) => {
     try {
-        const messages = await Message.findAll();
-        const userName = await User.findOne({ where: { id: req.user.id } })
-        res.status(200).json({messages,userName});
+        let messages;
+        if (!req.query.lastMessageDate) {
+            messages = await Message.findAll({ order: [['createdAt', 'ASC']] });
+        } else {
+            messages = await Message.findAll({ where: { createdAt: { [Op.gt]: req.query.lastMessageDate } } });
+        }
+        res.status(200).json({ messages});
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'internal server error' })

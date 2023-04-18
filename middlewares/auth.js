@@ -10,7 +10,6 @@ const authentication = async (req, res, next) => {
         const token = req.header('authorization');
         const secretkey = process.env.JWT_SECRET_KEY;
         const compare = jwt.verify(token, secretkey);
-        console.log(token,secretkey,compare)
         const user = await User.findByPk(compare.userId);
         req.user = user;
         next();
