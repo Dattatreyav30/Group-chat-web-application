@@ -10,7 +10,8 @@ const app = express();
 
 const User = require('./models/userModel');
 const Messages = require('./models/messageModel');
-
+const Group = require('./models/groupModel')
+const UserGroup = require('./models/userGroup');
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
 app.use(
@@ -21,13 +22,21 @@ app.use(
 );
 
 const userRoute = require('./routes/userRoute');
-const messageRoute = require('./routes/messageRoute')
+const messageRoute = require('./routes/messageRoute');
+const groupRoute = require('./routes/groupRoute');
 
 app.use('/user', userRoute);
-app.use('/message',messageRoute)
+app.use('/message', messageRoute);
+app.use('/group', groupRoute);
 
 User.hasMany(Messages);
 Messages.belongsTo(User);
+
+User.belongsToMany(Group, { through: UserGroup });
+Group.belongsToMany(User, { through: UserGroup });
+
+Group.hasMany(Messages);
+Messages.belongsTo(Group);
 
 sequelize.sync();
 app.listen(7000);

@@ -5,11 +5,13 @@ const { Op } = require('sequelize');
 
 exports.addMessage = async (req, res, next) => {
     try {
+        const groupId = req.header('groupId');
         const { message } = req.body;
         await Message.create({
             userId: req.user.id,
-            name : req.user.name,
-            messages: message
+            name: req.user.name,
+            messages: message,
+            groupId: groupId
         })
         res.status(200).json({ Message: 'message added succesfully' })
     } catch (err) {
@@ -18,13 +20,22 @@ exports.addMessage = async (req, res, next) => {
 }
 exports.getAllMessages = async (req, res, next) => {
     try {
+        const groupId = req.header('groupId')
         let messages;
         if (!req.query.lastMessageDate) {
-            messages = await Message.findAll({ order: [['createdAt', 'ASC']] });
+            messages = await Message.findAll({
+                where: { groupId: groupId },
+                order: [['createdAt', 'ASC']]
+            });
         } else {
-            messages = await Message.findAll({ where: { createdAt: { [Op.gt]: req.query.lastMessageDate } } });
+            messages = await Message.findAll({
+                where: {
+                    createdAt: { [Op.gt]: req.query.lastMessageDate },
+                    groupId: groupId
+                }
+            });
         }
-        res.status(200).json({ messages});
+        res.status(200).json({ messages });
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'internal server error' })

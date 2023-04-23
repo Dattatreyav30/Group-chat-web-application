@@ -9,7 +9,7 @@ form.addEventListener('submit', async (e) => {
         }
         const response = await axios.post('http://localhost:7000/user/login', obj);
         localStorage.setItem('token', response.data.token);
-        const chatUrl = `http://127.0.0.1:5500/public/Views/chat.html`;
+        const chatUrl = `http://127.0.0.1:5500/public/Views/group.html`;
         alert(response.data.message);
         window.location.href = chatUrl;
     } catch (err) {

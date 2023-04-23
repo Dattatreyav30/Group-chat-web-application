@@ -12,20 +12,21 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div class="container">
-        <div class="card" style="height: 500px;" id="chatMessage">
-            <div class="col-12 col-sm-6 card-body w-100">
-                <h1 class="h1 text-center">chat App</h1>
+        <div class="col-12 col-sm-6 offset-5 card mx-auto mt-5 p-3 border-dark w-50 position-relative" >
+            <div class="col-12 col-sm-6 card-body  top-0 end-0">
                 <div id="whoJoined">
                 </div>
-                <div id="userMessage" style="height: 400px; overflow-y: scroll;">
+                <div id="userMessage">
                 </div>
             </div>
             <div class=" mt-3 col-md-5">
                 <form action="" method="post">
                     <div class="input-group">
-                        <input type="text" name="message" id="message" class="form-control" placeholder="type a message">
+                        <input type="text" name="message" id="message" class="form-control"
+                            placeholder="type a message">
                         <button class="btn btn-primary">send message</button>
                     </div>
                 </form>
