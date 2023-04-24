@@ -74,3 +74,9 @@ const getGroupMessages = async (e) => {
     localStorage.setItem('groupName', e.target.innerHTML)
     window.location.href = 'http://127.0.0.1:5500/public/Views/chat.html'
 }
+
+const logout = document.getElementById('logout');
+logout.onclick = (e) => {
+    e.preventDefault();
+    window.location.href = 'http://127.0.0.1:5500/public/Views/signup.html'
+}

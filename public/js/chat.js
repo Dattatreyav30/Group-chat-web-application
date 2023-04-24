@@ -15,46 +15,44 @@ form.addEventListener('submit', async (e) => {
   }
 })
 
+const groupName = document.getElementById('groupName');
+
 window.addEventListener('DOMContentLoaded', async (e) => {
-  const groupName = document.getElementById('groupName');
-  groupName.innerHTML = localStorage.getItem('groupName')
+  groupName.innerHTML = localStorage.getItem('groupName');
   const token = localStorage.getItem('token');
   const groupId = localStorage.getItem('groupId');
-  e.preventDefault();
 
-  let messageFromStorage = [];
-  const messages = localStorage.getItem(`messages-${groupId}`);
-  if (messages) {
-    messageFromStorage = JSON.parse(messages);
-    messageFromStorage.slice(-10).forEach(async (obj) => {
-      await addtoFrontEnd(obj.name, obj.message);
-    });
-  } else {
+
+  let messageFromStorage = JSON.parse(localStorage.getItem(`messages-${groupId}`)) || [];
+
+
+  if (messageFromStorage.length === 0) {
     const response = await axios.get(`http://localhost:7000/message/getAllMessages`, { headers: { 'authorization': token, 'groupId': groupId } });
-    const newMessages = response.data.messages;
-    newMessages.forEach(async (obj) => {
-      messageFromStorage.push({ name: obj.name, message: obj.messages, createdAt: obj.createdAt });
-      localStorage.setItem(`messages-${groupId}`, JSON.stringify(messageFromStorage));
-    });
+    messageFromStorage = response.data.messages.map(obj => ({ name: obj.name, message: obj.messages, createdAt: obj.createdAt }));
+    localStorage.setItem(`messages-${groupId}`, JSON.stringify(messageFromStorage));
   }
+
   setInterval(async () => {
-    let lastMessageDate = null;
-    if (messageFromStorage.length > 0) {
-      lastMessageDate = messageFromStorage[messageFromStorage.length - 1].createdAt;
-      const response = await axios.get(`http://localhost:7000/message/getAllMessages?lastMessageDate=${lastMessageDate}`, { headers: { 'authorization': token, 'groupId': groupId } });
-      const newMessages = response.data.messages;
-      newMessages.forEach(async (obj) => {
-        if (messageFromStorage.length >= 10) {
-          messageFromStorage = messageFromStorage.slice(-10);
-          localStorage.setItem(`messages-${groupId}`, JSON.stringify(messageFromStorage));
-        }
-        messageFromStorage.push({ name: obj.name, message: obj.messages, createdAt: obj.createdAt });
+    const lastMessageDate = messageFromStorage.length > 0 ? messageFromStorage[messageFromStorage.length - 1].createdAt : null;
+    const response = await axios.get(`http://localhost:7000/message/getAllMessages?lastMessageDate=${lastMessageDate}`, { headers: { 'authorization': token, 'groupId': groupId } });
+    const newMessages = response.data.messages;
+
+
+    if (newMessages.length > 0) {
+      for (const obj of newMessages) {
+        const message = { name: obj.name, message: obj.messages, createdAt: obj.createdAt };
+        messageFromStorage.push(message);
         localStorage.setItem(`messages-${groupId}`, JSON.stringify(messageFromStorage));
-        await addtoFrontEnd(obj.name, obj.messages);
-      });
+        await addtoFrontEnd(message.name, message.message);
+      }
     }
   }, 1000);
+
+  messageFromStorage.slice(-10).forEach(async (obj) => {
+    await addtoFrontEnd(obj.name, obj.message);
+  });
 });
+
 
 const addtoFrontEnd = async (name, message) => {
   const messageContainer = document.getElementById('userMessage');
@@ -144,4 +142,10 @@ const makeAdmin = async (e, data) => {
     console.log(err)
   }
 
+}
+
+const logout = document.getElementById('logout');
+logout.onclick = (e) => {
+  e.preventDefault();
+  window.location.href = 'http://127.0.0.1:5500/public/Views/signup.html'
 }
