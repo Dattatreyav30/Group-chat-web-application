@@ -70,6 +70,7 @@ window.addEventListener('DOMContentLoaded', async (e) => {
 
 const getGroupMessages = async (e) => {
     const groupId = e.target.id;
-    localStorage.setItem('groupId',groupId)
+    localStorage.setItem('groupId', groupId);
+    localStorage.setItem('groupName', e.target.innerHTML)
     window.location.href = 'http://127.0.0.1:5500/public/Views/chat.html'
 }

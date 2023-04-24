@@ -16,8 +16,10 @@ form.addEventListener('submit', async (e) => {
 })
 
 window.addEventListener('DOMContentLoaded', async (e) => {
+  const groupName = document.getElementById('groupName');
+  groupName.innerHTML = localStorage.getItem('groupName')
   const token = localStorage.getItem('token');
-  const groupId = localStorage.getItem('groupId')
+  const groupId = localStorage.getItem('groupId');
   e.preventDefault();
 
   let messageFromStorage = [];
@@ -62,3 +64,83 @@ const addtoFrontEnd = async (name, message) => {
   messageContainer.insertAdjacentHTML('beforeend', messageHtml);
 };
 
+const showusers = document.getElementById('showusers');
+
+showusers.onclick = async (e) => {
+  e.preventDefault()
+  const groupId = localStorage.getItem('groupId');
+  const response = await axios.get('http://localhost:7000/group/getGroupUsers', {
+    headers: { groupId: groupId }
+  })
+  response.data.forEach(async (names) => {
+    await groupUsers(names);
+  })
+}
+
+const groupUsers = async (data) => {
+  const groupUsers = document.getElementById('groupUsers');
+  const tr = document.createElement('tr');
+  const nameTd = document.createElement('td');
+  const buttonTd = document.createElement('td');
+  const adminButton = document.createElement('button');
+  const removeButton = document.createElement('button');
+
+  nameTd.innerHTML = data;
+  adminButton.innerHTML = 'Make admin';
+  adminButton.className = 'btn btn-primary ms-2';
+  removeButton.innerHTML = 'Remove';
+  removeButton.className = 'btn btn-danger ms-2';
+  removeButton.onclick = (e) => {
+    deleteUserfromGroup(e, data);
+  }
+
+  adminButton.onclick = (e) => {
+    makeAdmin(e, data)
+  }
+
+  buttonTd.appendChild(adminButton);
+  buttonTd.appendChild(removeButton);
+
+  tr.appendChild(nameTd);
+  tr.appendChild(buttonTd);
+
+  groupUsers.appendChild(tr);
+}
+
+
+const deleteUserfromGroup = async (e, data) => {
+  try {
+    e.preventDefault();
+    const token = localStorage.getItem('token')
+    const groupId = localStorage.getItem('groupId')
+    const obj = {
+      name: data
+    }
+    const response = await axios.post('http://localhost:7000/group/removeUser', obj, {
+      headers: {
+        'groupId': groupId,
+        'authorization': token,
+      }
+    })
+    alert(response.data.message)
+    console.log(response.data.message)
+  } catch (err) {
+    alert(err.response.data.message)
+    console.log(err)
+  }
+}
+
+const makeAdmin = async (e,data) => {
+  try {
+    e.preventDefault();
+    const obj = {
+      name: data
+    }
+    const response = await axios.post('http://localhost:7000/group/makeAdmin', obj);
+    alert(response.data.message)
+  } catch (err) {
+    alert(err.response.data.message);
+    console.log(err)
+  }
+
+}
