@@ -130,13 +130,14 @@ const deleteUserfromGroup = async (e, data) => {
   }
 }
 
-const makeAdmin = async (e,data) => {
+const makeAdmin = async (e, data) => {
   try {
+    const token = localStorage.getItem('token')
     e.preventDefault();
     const obj = {
       name: data
     }
-    const response = await axios.post('http://localhost:7000/group/makeAdmin', obj);
+    const response = await axios.post('http://localhost:7000/group/makeAdmin', obj, { headers: { 'authorization': token } });
     alert(response.data.message)
   } catch (err) {
     alert(err.response.data.message);

@@ -113,6 +113,15 @@ exports.removeUser = async (req, res, next) => {
 
 exports.makeAdmin = async (req, res, next) => {
     try {
+        const checkAdmin = await UserGroup.findOne({
+            where: {
+                userId: req.user.id,
+                isAdmin: true
+            }
+        })
+        if (!checkAdmin) {
+            return res.status(401).json({ message: 'you are not a admin' })
+        }
         const name = req.body.name;
         const user = await User.findOne({
             where: {

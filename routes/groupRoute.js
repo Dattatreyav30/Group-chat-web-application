@@ -14,8 +14,8 @@ router.get('/getGroups', userAuth.authentication, groupController.getGroups);
 
 router.get('/getGroupUsers', groupController.getGroupUsers);
 
-router.post('/removeUser',userAuth.authentication ,groupController.removeUser);
+router.post('/removeUser', userAuth.authentication, groupController.removeUser);
 
-router.post('/makeAdmin',groupController.makeAdmin)
+router.post('/makeAdmin', userAuth.authentication, groupController.makeAdmin)
 
 module.exports = router;
