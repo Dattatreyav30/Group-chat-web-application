@@ -30,6 +30,10 @@
                                     placeholder="type a message">
                                 <button class="btn btn-primary">send message</button>
                             </div>
+                            <div class="input-group mt-3">
+                                <input type="file" name="fileName" id="sendFile" class="form-control">
+                                <button class="btn btn-primary">send media</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -42,13 +46,29 @@
                             <h3 class="h3 text-center">Current users</h3>
                             <div class="col text-center">
                                 <button class="btn btn-warning mb-4" id="showusers">show users</button>
-                              </div>
+                            </div>
                             <div id="groupUsers" class="">
                             </div>
                         </form>
                     </div>
                 </div>
+                <div class="col-sm-12 col-md">
+                    <div class="card p-3 border-dark">
+                        <h1 id="groupName3" class="h1 text-center"></h1>
+                        <div class="card-body">
+                            <form action="" method="post">
+                                <h3 class="h3 text-center">add users</h3>
+                                <div class="col text-center">
+                                    <button class="btn btn-success mb-4" id="addusers">Add users</button>
+                                </div>
+                                <div id="addusers1" class="">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
         <script src="/public/js/chat.js"></script>

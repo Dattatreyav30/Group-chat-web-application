@@ -149,3 +149,76 @@ logout.onclick = (e) => {
   e.preventDefault();
   window.location.href = 'http://127.0.0.1:5500/public/Views/signup.html'
 }
+
+const addusers = document.getElementById('addusers').onclick = async (e) => {
+  try {
+    e.preventDefault();
+    const token = localStorage.getItem('token')
+    const groupId = localStorage.getItem('groupId')
+    const response = await axios.get('http://localhost:7000/group/newusers', {
+      headers: {
+        'groupId': groupId,
+        'authorization': token
+      }
+
+    })
+    if (response.data.message) {
+      alert(response.data.message)
+    }
+    console.log(response.data)
+    await response.data.forEach(async (user) => {
+      addusers1(user)
+
+    })
+
+  } catch (err) {
+    alert(err.response.message)
+  }
+}
+
+
+const addusers1 = (user) => {
+  const mainDiv = document.getElementById('addusers1');
+  const tr = document.createElement('tr');
+  const nameTd = document.createElement('td');
+  const btnTd = document.createElement('td');
+  const addBtn = document.createElement('button');
+
+  addBtn.className = 'btn btn-primary';
+  addBtn.innerHTML = 'Add'
+  addBtn.onclick = (e) => {
+    shownewUsers(e, user.id)
+  }
+
+  nameTd.innerHTML = user.name;
+  btnTd.appendChild(addBtn)
+
+  tr.appendChild(nameTd);
+  tr.appendChild(btnTd);
+
+  mainDiv.appendChild(tr);
+}
+
+
+const shownewUsers = async (e, id) => {
+  try {
+    e.preventDefault();
+    console.log(id)
+    const groupName = document.getElementById('groupName').innerHTML
+    const groupId = localStorage.getItem('groupId');
+    const token = localStorage.getItem('token');
+    const obj = {
+      id : id
+    }
+    const response = await axios.post('http://localhost:7000/group/addnewuser', obj, {
+      headers: {
+        'authorization': token,
+        'groupId': groupId,
+        'groupName': groupName
+      }
+    });
+    alert(response.data.message)
+  } catch (err) {
+    alert(err.response.data.message)
+  }
+}

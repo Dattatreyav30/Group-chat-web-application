@@ -150,3 +150,67 @@ exports.makeAdmin = async (req, res, next) => {
     }
 }
 
+
+
+exports.newusers = async (req, res, next) => {
+    try {
+        const existingAdmin = UserGroup.findOne({
+            where: {
+                userId: req.user.id,
+                isAdmin : true
+            }
+        })
+        if (!existingAdmin) {
+            return res.status(401).json({ message: 'you nare not a admin ' })
+        }
+
+        const groupId = req.header('groupId');
+        const groupUsers = await UserGroup.findAll({
+            where: {
+                groupId: groupId
+            }
+        })
+        const userIds = await groupUsers.map(user => user.userId);
+        const users = await User.findAll({
+            where: {
+                id: {
+                    [Op.notIn]: userIds
+                }
+            }
+        })
+        res.status(200).json(users)
+    } catch (err) {
+        res.status(500).json({ message: 'internal server error' });
+        console.log(err)
+    }
+}
+
+exports.addnewuser = async (req, res, next) => {
+    try {
+        const existingAdmin = await UserGroup.findOne({
+            where: {
+                userId: req.user.id,
+                isAdmin : true
+            }
+        })
+        console.log(existingAdmin)
+        if (!existingAdmin) {
+            return res.status(401).json({ message: 'you nare not a admin ' })
+        }
+        const groupId = req.header('groupId');
+        const userId = req.body.id;
+        const groupName = req.header('groupName');
+
+        console.log(groupId,userId,groupName)
+        await UserGroup.create({
+            groupName: groupName,
+            userId: userId,
+            groupId: groupId,
+        })
+        res.status(200).json({message:'user added successfully'})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'internal server error' })
+    }
+
+}

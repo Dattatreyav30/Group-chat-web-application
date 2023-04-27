@@ -2,11 +2,19 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 
-const cors = require('cors')
+const cors = require('cors');
 
 const sequelize = require('./util/database')
 
 const app = express();
+
+const server = require('http').createServer(app);
+
+const io = require('socket.io')(server, {
+    cors: {
+        origin: '*'
+    }
+})
 
 const User = require('./models/userModel');
 const Messages = require('./models/messageModel');
@@ -39,4 +47,9 @@ Group.hasMany(Messages);
 Messages.belongsTo(Group);
 
 sequelize.sync();
-app.listen(7000);
+server.listen(7000)
+
+
+io.on('connection', (socket) => {
+    console.log(socket.id);
+})
