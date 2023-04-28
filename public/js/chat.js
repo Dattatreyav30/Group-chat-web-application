@@ -68,8 +68,11 @@ showusers.onclick = async (e) => {
   e.preventDefault()
   const groupId = localStorage.getItem('groupId');
   const response = await axios.get('http://localhost:7000/group/getGroupUsers', {
-    headers: { groupId: groupId }
+    headers: {
+      groupId: groupId
+    }
   })
+  console.log(response)
   response.data.forEach(async (names) => {
     await groupUsers(names);
   })
@@ -208,7 +211,7 @@ const shownewUsers = async (e, id) => {
     const groupId = localStorage.getItem('groupId');
     const token = localStorage.getItem('token');
     const obj = {
-      id : id
+      id: id
     }
     const response = await axios.post('http://localhost:7000/group/addnewuser', obj, {
       headers: {

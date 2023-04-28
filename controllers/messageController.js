@@ -1,7 +1,7 @@
 const Message = require('../models/messageModel');
-
-const User = require('../models/userModel');
 const { Op } = require('sequelize');
+
+const { cronJob } = require('cron')
 
 exports.addMessage = async (req, res, next) => {
     try {
@@ -41,3 +41,17 @@ exports.getAllMessages = async (req, res, next) => {
         res.status(500).json({ message: 'internal server error' })
     }
 }
+
+const job = new cronJob('0 0 * * *', async () => {
+    const today = new Date();
+    await Message.destroy({
+        where: {
+            createdAt: {
+                [Op.lt]: today
+            }
+        }
+    })
+})
+
+job.start();
+job.stop();

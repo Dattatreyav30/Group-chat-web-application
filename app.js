@@ -8,14 +8,6 @@ const sequelize = require('./util/database')
 
 const app = express();
 
-const server = require('http').createServer(app);
-
-const io = require('socket.io')(server, {
-    cors: {
-        origin: '*'
-    }
-})
-
 const User = require('./models/userModel');
 const Messages = require('./models/messageModel');
 const Group = require('./models/groupModel')
@@ -47,9 +39,6 @@ Group.hasMany(Messages);
 Messages.belongsTo(Group);
 
 sequelize.sync();
-server.listen(7000)
+app.listen(7000)
 
 
-io.on('connection', (socket) => {
-    console.log(socket.id);
-})

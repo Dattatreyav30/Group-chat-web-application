@@ -8,6 +8,8 @@ const UserGroup = require('../models/userGroup');
 
 const { v4: uuidv4 } = require('uuid');
 
+require('dotenv').config();
+
 
 exports.getUsers = async (req, res, next) => {
     try {
@@ -157,7 +159,7 @@ exports.newusers = async (req, res, next) => {
         const existingAdmin = UserGroup.findOne({
             where: {
                 userId: req.user.id,
-                isAdmin : true
+                isAdmin: true
             }
         })
         if (!existingAdmin) {
@@ -190,7 +192,7 @@ exports.addnewuser = async (req, res, next) => {
         const existingAdmin = await UserGroup.findOne({
             where: {
                 userId: req.user.id,
-                isAdmin : true
+                isAdmin: true
             }
         })
         console.log(existingAdmin)
@@ -200,17 +202,18 @@ exports.addnewuser = async (req, res, next) => {
         const groupId = req.header('groupId');
         const userId = req.body.id;
         const groupName = req.header('groupName');
-
-        console.log(groupId,userId,groupName)
         await UserGroup.create({
             groupName: groupName,
             userId: userId,
             groupId: groupId,
         })
-        res.status(200).json({message:'user added successfully'})
+        res.status(200).json({ message: 'user added successfully' })
     } catch (err) {
         console.log(err)
         res.status(500).json({ message: 'internal server error' })
     }
 
 }
+
+
+
