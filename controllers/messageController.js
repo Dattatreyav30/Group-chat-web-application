@@ -1,7 +1,7 @@
 const Message = require('../models/messageModel');
 const { Op } = require('sequelize');
 
-const { cronJob } = require('cron')
+const cronJob = require('cron').CronJob;
 
 exports.addMessage = async (req, res, next) => {
     try {

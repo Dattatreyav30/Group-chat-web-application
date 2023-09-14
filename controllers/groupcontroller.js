@@ -214,6 +214,3 @@ exports.addnewuser = async (req, res, next) => {
     }
 
 }
-
-
-

@@ -14,12 +14,7 @@ const Group = require('./models/groupModel')
 const UserGroup = require('./models/userGroup');
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
-app.use(
-    cors({
-        origin: 'http://127.0.0.1:5500',
-        methods: ['GET', 'POST']
-    })
-);
+app.use(cors());
 
 const userRoute = require('./routes/userRoute');
 const messageRoute = require('./routes/messageRoute');
